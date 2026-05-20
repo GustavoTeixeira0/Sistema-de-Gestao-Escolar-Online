@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Painel do Professor</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ALUNOS + MATÉRIA -->
+  <div class="card" style="width:500px; min-height:850px;">
+
+    <div class="title">
+      <h1>Alunos</h1>
+      <span style="font-size:45px;">👤</span>
+    </div>
+
+    <!-- ESCOLHER MATÉRIA -->
+    <div class="input-group">
+      <select id="materiaSelect">
+        <option value="Português">Português</option>
+        <option value="História">História</option>
+        <option value="Geografia">Geografia</option>
+        <option value="Ciência">Ciência</option>
+        <option value="Matemática">Matemática</option>
+        <option value="Educação Física">Educação Física</option>
+        <option value="Arte">Arte</option>
+      </select>
+    </div>
+
+    <!-- LISTA DE ALUNOS -->
+    <div class="subject-list" id="listaAlunos"></div>
+
+  </div>
+
+  <!-- NOTAS -->
+  <div class="card" style="width:700px; min-height:850px;">
+
+    <div class="title">
+      <h1>Notas dos alunos</h1>
+      <span style="font-size:45px;">📝</span>
+    </div>
+
+    <h2 id="nomeAluno"
+      style="
+        text-align:center;
+        margin-bottom:25px;
+        color:#00ffff;
+        font-size:30px;
+      ">
+      Selecione um aluno
+    </h2>
+
+    <div class="grades-grid">
+
+      <div class="grade-header">Bimestre 1</div>
+      <div class="grade-header">Bimestre 2</div>
+      <div class="grade-header">Bimestre 3</div>
+      <div class="grade-header">Bimestre 4</div>
+
+      <div class="grade-box">
+        <input type="number" step="0.1" id="n1">
+      </div>
+
+      <div class="grade-box">
+        <input type="number" step="0.1" id="n2">
+      </div>
+
+      <div class="grade-box">
+        <input type="number" step="0.1" id="n3">
+      </div>
+
+      <div class="grade-box">
+        <input type="number" step="0.1" id="n4">
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button onclick="salvarNotas()">
+        SALVAR NOTAS
+      </button>
+    </div>
+
+    <div class="msg" id="msg"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+/*
+========================================
+USUÁRIO LOGADO
+========================================
+*/
+
+const usuarioLogado = JSON.parse(
+  localStorage.getItem("usuarioLogado")
+);
+
+/*
+========================================
+VERIFICAÇÃO
+========================================
+*/
+
+if(
+  usuarioLogado.tipo !== "Professor" &&
+  usuarioLogado.tipo !== "Administrador"
+){
+  alert("Acesso permitido apenas para professores/admin.");
+  window.location.href = "index.html";
+}
+
+/*
+========================================
+PEGAR ALUNOS DA MESMA ESCOLA
+========================================
+*/
+
+const usuarios = JSON.parse(
+  localStorage.getItem("usuarios")
+) || [];
+
+const alunos = usuarios.filter(user => {
+
+  return (
+    user.tipo === "Aluno" &&
+    user.escola === usuarioLogado.escola
+  );
+
+});
+
+/*
+========================================
+LISTAR ALUNOS
+========================================
+*/
+
+const listaAlunos = document.getElementById("listaAlunos");
+
+let alunoSelecionado = null;
+
+function renderizarAlunos(){
+
+  listaAlunos.innerHTML = "";
+
+  alunos.forEach(aluno => {
+
+    const div = document.createElement("div");
+
+    div.className = "subject";
+
+    div.style.cursor = "pointer";
+
+    div.innerText = aluno.cpf;
+
+    div.onclick = () => selecionarAluno(aluno);
+
+    listaAlunos.appendChild(div);
+
+  });
+
+}
+
+renderizarAlunos();
+
+/*
+========================================
+SELECIONAR ALUNO
+========================================
+*/
+
+function selecionarAluno(aluno){
+
+  alunoSelecionado = aluno;
+
+  nomeAluno.innerText =
+    "Aluno: " + aluno.cpf;
+
+  carregarNotas();
+
+}
+
+/*
+========================================
+CARREGAR NOTAS
+========================================
+*/
+
+function carregarNotas(){
+
+  const materia =
+    document.getElementById("materiaSelect").value;
+
+  const todasNotas = JSON.parse(
+    localStorage.getItem("notas")
+  ) || {};
+
+  const chave =
+    alunoSelecionado.cpf + "_" + materia;
+
+  const notas = todasNotas[chave] || [
+    "", "", "", ""
+  ];
+
+  n1.value = notas[0];
+  n2.value = notas[1];
+  n3.value = notas[2];
+  n4.value = notas[3];
+
+}
+
+/*
+========================================
+SALVAR NOTAS
+========================================
+*/
+
+function salvarNotas(){
+
+  if(!alunoSelecionado){
+
+    msg.innerText =
+      "Selecione um aluno.";
+
+    return;
+  }
+
+  const materia =
+    document.getElementById("materiaSelect").value;
+
+  const todasNotas = JSON.parse(
+    localStorage.getItem("notas")
+  ) || {};
+
+  const chave =
+    alunoSelecionado.cpf + "_" + materia;
+
+  todasNotas[chave] = [
+    n1.value,
+    n2.value,
+    n3.value,
+    n4.value
+  ];
+
+  localStorage.setItem(
+    "notas",
+    JSON.stringify(todasNotas)
+  );
+
+  msg.innerText =
+    "Notas salvas com sucesso!";
+
+}
+
+/*
+========================================
+ALTERAR MATÉRIA
+========================================
+*/
+
+materiaSelect.addEventListener(
+  "change",
+  () => {
+
+    if(alunoSelecionado){
+      carregarNotas();
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>

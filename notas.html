@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Notas</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- MATÉRIAS -->
+  <div class="card" style="width:500px; min-height:800px;">
+
+    <div class="title">
+      <h1>Matérias</h1>
+      <span style="font-size:50px;">👤</span>
+    </div>
+
+    <div class="subject-list">
+
+      <div class="subject">Língua Portuguesa</div>
+      <div class="subject">História</div>
+      <div class="subject">Geografia</div>
+      <div class="subject">Ciência</div>
+      <div class="subject">Matemática</div>
+      <div class="subject">Educação Física</div>
+      <div class="subject">Arte</div>
+
+    </div>
+
+  </div>
+
+  <!-- NOTAS -->
+  <div class="card" style="width:650px; min-height:800px;">
+
+    <div class="title">
+      <h1>Notas dos alunos</h1>
+      <span style="font-size:50px;">📝</span>
+    </div>
+
+    <div class="grades-grid">
+
+      <div class="grade-header">Bimestre 1</div>
+      <div class="grade-header">Bimestre 2</div>
+      <div class="grade-header">Bimestre 3</div>
+      <div class="grade-header">Bimestre 4</div>
+
+      <!-- PORTUGUÊS -->
+      <div class="grade-box"><input value="8.5"></div>
+      <div class="grade-box"><input value="7.0"></div>
+      <div class="grade-box"><input value="9.2"></div>
+      <div class="grade-box"><input value="8.8"></div>
+
+      <!-- HISTÓRIA -->
+      <div class="grade-box"><input value="6.5"></div>
+      <div class="grade-box"><input value="7.8"></div>
+      <div class="grade-box"><input value="8.0"></div>
+      <div class="grade-box"><input value="7.2"></div>
+
+      <!-- GEOGRAFIA -->
+      <div class="grade-box"><input value="9.0"></div>
+      <div class="grade-box"><input value="8.7"></div>
+      <div class="grade-box"><input value="9.5"></div>
+      <div class="grade-box"><input value="9.2"></div>
+
+      <!-- CIÊNCIA -->
+      <div class="grade-box"><input value="7.2"></div>
+      <div class="grade-box"><input value="6.8"></div>
+      <div class="grade-box"><input value="7.5"></div>
+      <div class="grade-box"><input value="8.0"></div>
+
+      <!-- MATEMÁTICA -->
+      <div class="grade-box"><input value="5.5"></div>
+      <div class="grade-box"><input value="6.0"></div>
+      <div class="grade-box"><input value="7.1"></div>
+      <div class="grade-box"><input value="6.8"></div>
+
+      <!-- EDUCAÇÃO FÍSICA -->
+      <div class="grade-box"><input value="8.0"></div>
+      <div class="grade-box"><input value="9.0"></div>
+      <div class="grade-box"><input value="9.5"></div>
+      <div class="grade-box"><input value="10"></div>
+
+      <!-- ARTE -->
+      <div class="grade-box"><input value="9.5"></div>
+      <div class="grade-box"><input value="8.8"></div>
+      <div class="grade-box"><input value="9.0"></div>
+      <div class="grade-box"><input value="9.7"></div>
+
+    </div>
+
+    <div class="actions">
+      <button id="btnSalvar" onclick="salvarNotas()">
+        SALVAR NOTAS
+      </button>
+    </div>
+
+    <div class="msg" id="msg"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+const usuario = JSON.parse(
+  localStorage.getItem("usuarioLogado")
+);
+
+const btnSalvar = document.getElementById("btnSalvar");
+
+if(usuario.tipo === "Aluno"){
+  btnSalvar.classList.add("hidden");
+
+  document.querySelectorAll(".grade-box input")
+    .forEach(input => {
+      input.disabled = true;
+    });
+}
+
+function salvarNotas(){
+
+  const notas = [];
+
+  document.querySelectorAll(".grade-box input")
+    .forEach(input => {
+      notas.push(input.value);
+    });
+
+  localStorage.setItem(
+    "notas",
+    JSON.stringify(notas)
+  );
+
+  msg.innerText = "Notas salvas com sucesso!";
+}
+
+function carregarNotas(){
+
+  const notas = JSON.parse(
+    localStorage.getItem("notas")
+  );
+
+  if(!notas) return;
+
+  document.querySelectorAll(".grade-box input")
+    .forEach((input, index) => {
+
+      input.value = notas[index];
+
+    });
+}
+
+carregarNotas();
+
+</script>
+
+</body>
+</html>
