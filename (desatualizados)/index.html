@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- LOGIN -->
+    <div class="card" style="width:500px; min-height:700px;">
+      
+      <div class="title">
+        <h1>Login</h1>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="loginCpf" placeholder="CPF">
+        <span class="icon">👤</span>
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="loginSenha" placeholder="Senha">
+        <span class="icon">🔑</span>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="loginEscola" placeholder="Escola">
+        <span class="icon">🏫</span>
+      </div>
+
+      <div class="link">
+        <a href="#">esqueci minha senha</a>
+      </div>
+
+      <div class="actions">
+        <button onclick="fazerLogin()">FAZER LOGIN</button>
+      </div>
+
+      <div class="msg" id="msgLogin"></div>
+    </div>
+
+    <!-- CADASTRO -->
+    <div class="card" style="width:500px; min-height:700px;">
+
+      <div class="title">
+        <h1>Cadastro</h1>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="cadCpf" placeholder="CPF">
+        <span class="icon">👤</span>
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="cadSenha" placeholder="Senha">
+        <span class="icon">🔑</span>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="cadEscola" placeholder="Escola">
+        <span class="icon">🏫</span>
+      </div>
+
+      <div class="input-group">
+        <select id="cadTipo">
+          <option value="">Tipo de conta</option>
+          <option value="Aluno">Aluno</option>
+          <option value="Professor">Professor</option>
+          <option value="Administrador">Administrador</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button onclick="cadastrar()">SOLICITAR INSCRIÇÃO</button>
+      </div>
+
+      <div class="link">
+        <a href="#">inscreva sua instituição aqui</a>
+      </div>
+
+      <div class="msg" id="msgCadastro"></div>
+    </div>
+
+  </div>
+
+<script>
+
+function pegarUsuarios(){
+  return JSON.parse(localStorage.getItem("usuarios")) || [];
+}
+
+function salvarUsuarios(lista){
+  localStorage.setItem("usuarios", JSON.stringify(lista));
+}
+
+function cadastrar(){
+
+  const cpf = cadCpf.value;
+  const senha = cadSenha.value;
+  const escola = cadEscola.value;
+  const tipo = cadTipo.value;
+
+  if(!cpf || !senha || !escola || !tipo){
+    msgCadastro.innerText = "Preencha todos os campos";
+    return;
+  }
+
+  const usuarios = pegarUsuarios();
+
+  const existe = usuarios.find(u => u.cpf === cpf);
+
+  if(existe){
+    msgCadastro.innerText = "CPF já cadastrado";
+    return;
+  }
+
+  usuarios.push({
+    cpf,
+    senha,
+    escola,
+    tipo
+  });
+
+  salvarUsuarios(usuarios);
+
+  msgCadastro.innerText = "Cadastro realizado!";
+}
+
+function fazerLogin(){
+
+  const cpf = loginCpf.value;
+  const senha = loginSenha.value;
+
+  const usuarios = pegarUsuarios();
+
+  const usuario = usuarios.find(
+    u => u.cpf === cpf && u.senha === senha
+  );
+
+  if(usuario){
+
+    localStorage.setItem(
+      "usuarioLogado",
+      JSON.stringify(usuario)
+    );
+
+    if(
+      usuario.tipo === "Professor" ||
+      usuario.tipo === "Administrador"
+    ){
+      window.location.href = "professor.html";
+    }else{
+      window.location.href = "notas.html";
+    }
+
+  }else{
+    msgLogin.innerText = "CPF ou senha inválidos";
+  }
+}
+
+</script>
+
+</body>
+</html>
