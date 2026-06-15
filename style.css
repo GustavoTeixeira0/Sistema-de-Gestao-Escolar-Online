@@ -57,12 +57,7 @@ background:rgba(0, 20, 35, 0.95);
 border-radius:20px;
 padding:35px;
 margin: 10px;
-box-shadow:0 0 20px rgba(0,255,255,0.08);
-
-/*box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-    
-    margin: 10px; */
-}
+box-shadow:0 0 20px rgba(0,255,255,0.08);}
 
 .title{
 display:flex;
