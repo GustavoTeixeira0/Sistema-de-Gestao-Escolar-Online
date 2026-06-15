@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -8,10 +9,10 @@ app.use(cors()); // Permite que o seu arquivo script.js acesse esta API
 
 // CONFIGURAÇÃO DA CONEXÃO COM O SEU BANCO DO AIVEN
 const db = mysql.createConnection({
-    host: 'mysql-375ad4d1-unipam-0534.a.aivencloud.com', // <-- Cole o seu Host do Aiven aqui
-    user: 'avnadmin',
-    password: 'AVNS_mJ5xMxfMvVFdTxTvvc0',          // <-- Cole a sua senha do Aiven aqui
-    database: 'defaultdb',
+    host: process.env.DB_HOST, // <-- Cole o seu Host do Aiven aqui
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,          // <-- Cole a sua senha do Aiven aqui
+    database: process.env.DB_NAME,
     port: 24796,       // <-- Mude para a sua Porta do Aiven (sem aspas)
     ssl: { rejectUnauthorized: false }        // Exigência de segurança do Aiven
 });
