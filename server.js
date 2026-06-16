@@ -1,83 +1,122 @@
 require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 
 const app = express();
+
+// CORS para Codespaces
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
-app.use(cors()); // Permite que o seu arquivo script.js acesse esta API
 
-// CONFIGURAÇÃO DA CONEXÃO COM O SEU BANCO DO AIVEN
+// Conexão com o banco
 const db = mysql.createConnection({
-    host: process.env.DB_HOST, // <-- Cole o seu Host do Aiven aqui
+    host: process.env.DB_HOST,
     user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,          // <-- Cole a sua senha do Aiven aqui
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: 24796,       // <-- Mude para a sua Porta do Aiven (sem aspas)
-    ssl: { rejectUnauthorized: false }        // Exigência de segurança do Aiven
-});
-
-// TESTA A CONEXÃO COM O BANCO DE DADOS AO INICIAR
-db.connect(err => {
-    if (err) {
-        console.error('Erro crítico ao conectar no MySQL:', err);
-    } else {
-        console.log('Conectado com sucesso ao MySQL do Aiven!');
+    port: 24796,
+    ssl: {
+        rejectUnauthorized: false
     }
 });
 
-// ==========================================
-// ROTA DE CADASTRO (SOLICITAR INSCRIÇÃO)
-// ==========================================
-app.post('/cadastrar', (req, res) => {
-    const { cpf, senha, school, tipo } = req.body; // Mudei para pegar os dados do formulário escolar
-    
-    // Como você usou "loginEscola" e "loginSenha" no HTML, o script.js envia como cpf, senha, escola, tipo
-    // Aqui usamos "escola" para bater com a coluna que criamos no MySQL
-    const escola = req.body.escola || school; 
+// Testa conexão
+db.connect((err) => {
+    if (err) {
+        console.error('Erro ao conectar no MySQL:', err);
+        return;
+    }
 
-    const query = 'INSERT INTO usuarios (cpf, senha, escola, tipo) VALUES (?, ?, ?, ?)';
-    
+    console.log('Conectado com sucesso ao MySQL do Aiven!');
+});
+
+// Rota de teste
+app.get('/', (req, res) => {
+    res.send('API funcionando!');
+});
+
+// Cadastro
+app.post('/cadastrar', (req, res) => {
+    console.log('CADASTRO RECEBIDO:', req.body);
+
+    const { cpf, senha, escola, tipo } = req.body;
+
+    if (!cpf || !senha || !escola || !tipo) {
+        return res.status(400).json({
+            erro: 'Todos os campos são obrigatórios.'
+        });
+    }
+
+    const query =
+        'INSERT INTO usuarios (cpf, senha, escola, tipo) VALUES (?, ?, ?, ?)';
+
     db.query(query, [cpf, senha, escola, tipo], (err, result) => {
         if (err) {
-            console.error('Erro no MySQL ao cadastrar:', err);
-            // Se o CPF já existir, o MySQL vai barrar por ser UNIQUE e cairá aqui
-            return res.status(500).json({ erro: 'Este CPF já está cadastrado ou houve um erro no servidor.' });
+            console.error('Erro ao cadastrar:', err);
+
+            return res.status(500).json({
+                erro: 'CPF já cadastrado ou erro no banco.'
+            });
         }
-        res.json({ mensagem: 'Solicitação de inscrição enviada com sucesso!' });
+
+        res.json({
+            mensagem: 'Solicitação de inscrição enviada com sucesso!'
+        });
     });
 });
 
-// ==========================================
-// ROTA DE LOGIN
-// ==========================================
+// Login
 app.post('/login', (req, res) => {
+    console.log('LOGIN RECEBIDO:', req.body);
+
     const { cpf, senha, escola } = req.body;
-    
-    // O banco busca um usuário onde o CPF, a Senha E a Escola estejam perfeitamente corretos
-    const query = 'SELECT id, cpf, escola, tipo FROM usuarios WHERE cpf = ? AND senha = ? AND escola = ?';
-    
+
+    if (!cpf || !senha || !escola) {
+        return res.status(400).json({
+            erro: 'Todos os campos são obrigatórios.'
+        });
+    }
+
+    const query = `
+        SELECT id, cpf, escola, tipo
+        FROM usuarios
+        WHERE cpf = ?
+        AND senha = ?
+        AND escola = ?
+    `;
+
     db.query(query, [cpf, senha, escola], (err, results) => {
         if (err) {
-            console.error('Erro no MySQL ao logar:', err);
-            return res.status(500).json({ erro: 'Erro interno no servidor.' });
-        }
-        
-        // Se encontrou alguma linha, os dados batem!
-        if (results.length > 0) {
-            // Retorna sucesso e envia os dados do usuário logado (como o tipo: Aluno/Professor)
-            res.json({ 
-                mensagem: 'Login efetuado com sucesso!', 
-                usuario: results[0] 
+            console.error('Erro no login:', err);
+
+            return res.status(500).json({
+                erro: 'Erro interno do servidor.'
             });
-        } else {
-            // Se não encontrou nada, os dados digitados estão errados
-            res.status(401).json({ erro: 'CPF, Senha ou Escola incorretos.' });
         }
+
+        if (results.length === 0) {
+            return res.status(401).json({
+                erro: 'CPF, senha ou escola incorretos.'
+            });
+        }
+
+        res.json({
+            mensagem: 'Login efetuado com sucesso!',
+            usuario: results[0]
+        });
     });
 });
 
-// LIGA O SERVIDOR NA PORTA 3000 DO CODESPACES
-app.listen(3000, () => {
-    console.log('Servidor back-end rodando na porta 3000');
+// Inicializa servidor
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
