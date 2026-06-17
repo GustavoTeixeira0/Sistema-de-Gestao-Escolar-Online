@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestão Escolar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">Login e Cadastro</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+
+          <li class="nav-item">
+            <a class="nav-link active" href="notas.html">Notas</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="faltas.html">Faltas</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="informacoes_da_escola.html">Informacoes da escola</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Painel Administrativo</a>
+          </li>
+
+          </li>
+        </ul>
+        <span id="navUserInfo" class="navbar-text text-info hidden"></span>
+
+      </div>
+    </div>
+  </nav>
+  <br>
+  <div id="painelAdminContent" class="container hidden">
+
+    <div class="card" style="width:100%; max-width:1200px;">
+
+      <div class="title">
+        <h2>Gerenciar Usuários da Escola</h2>
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="listarUsuariosEscola()">Atualizar lista</button>
+      </div>
+
+      <div id="msgPainel" class="msg"></div>
+
+      <div id="usuariosContainer"></div>
+
+    </div>
+
+  </div>
+
+  <div id="acessoNegado" class="container">
+    <div class="card" style="width:100%; max-width:600px; text-align: center;">
+      <div class="title">
+        <h2 style="color: #ff6b6b;">Acesso Negado</h2>
+      </div>
+      <p style="font-size: 20px; color: #8defff; margin: 20px 0;">
+        Esta página é restrita para Administradores.
+      </p>
+      <div class="actions">
+        <button type="button" onclick="window.location.href='index.html'">Voltar ao login</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

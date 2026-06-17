@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestão Escolar - Informações da Escola</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">Login e Cadastro</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="notas.html">Notas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="faltas.html">Faltas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Informações da escola</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="painel_administrativo.html">Painel Administrativo</a>
+          </li>
+        </ul>
+        <span id="navUserInfo" class="navbar-text text-info hidden"></span>
+      </div>
+    </div>
+  </nav>
+  <br>
+  <div class="container">
+
+    <div id="acessoNegado" class="card hidden">
+      <div class="title">
+        <h2>Acesso Negado</h2>
+        <i class="bi bi-exclamation-triangle icon-title"></i>
+      </div>
+      <p style="color: #ff6b6b; font-size: 18px; text-align: center;">Você precisa estar logado para acessar esta página.</p>
+      <div class="actions">
+        <a href="index.html" style="text-decoration: none;">
+          <button>Voltar para Login</button>
+        </a>
+      </div>
+    </div>
+
+    <div id="escolaInfo" class="card hidden">
+      <div class="title">
+        <h2>Informações da Escola</h2>
+        <i class="bi bi-building icon-title"></i>
+      </div>
+
+      <div id="infoContainer" style="margin-top: 20px;"></div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+  <script>
+    function renderInformacoesEscola() {
+      const sessao = carregarSessao();
+      const acessoNegado = document.getElementById('acessoNegado');
+      const escolaInfo = document.getElementById('escolaInfo');
+      const infoContainer = document.getElementById('infoContainer');
+
+      if (!sessao) {
+        acessoNegado?.classList.remove('hidden');
+        escolaInfo?.classList.add('hidden');
+        return;
+      }
+
+      acessoNegado?.classList.add('hidden');
+      escolaInfo?.classList.remove('hidden');
+
+      const escola = carregarEscola(sessao.escola);
+      if (!escola) {
+        infoContainer.innerHTML = '<p style="color: #ff6b6b;">Informações da escola não encontradas.</p>';
+        return;
+      }
+
+      let html = `
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between;">
+          
+          <div style="flex: 1 1 45%; min-width: 320px; background: rgba(0, 24, 40, 0.95); border: 1px solid rgba(0, 255, 255, 0.18); border-radius: 18px; padding: 20px; color: #00e5ff;">
+            <h3 style="color: #00e5ff; margin-bottom: 15px; font-weight: bold;">Informações Gerais</h3>
+            <p><strong>Nome:</strong> ${escola.nome}</p>
+            <p><strong>CNPJ:</strong> ${escola.cnpj}</p>
+            <p><strong>Tipo:</strong> ${escola.tipo || '-'}</p>
+            <p><strong>E-mail:</strong> ${escola.email}</p>
+            <p><strong>Telefone:</strong> ${escola.telefone || '-'}</p>
+            <p><strong>WhatsApp:</strong> ${escola.whatsapp || '-'}</p>
+          </div>
+
+          <div style="flex: 1 1 45%; min-width: 320px; background: rgba(0, 24, 40, 0.95); border: 1px solid rgba(0, 255, 255, 0.18); border-radius: 18px; padding: 20px; color: #00e5ff;">
+            <h3 style="color: #00e5ff; margin-bottom: 15px;">Endereço</h3>
+            <p><strong>Rua:</strong> ${escola.endereco?.rua || '-'}</p>
+            <p><strong>Número:</strong> ${escola.endereco?.numero || '-'}</p>
+            <p><strong>Bairro:</strong> ${escola.endereco?.bairro || '-'}</p>
+            <p><strong>Cidade:</strong> ${escola.endereco?.cidade || '-'}</p>
+            <p><strong>Estado:</strong> ${escola.endereco?.estado || '-'}</p>
+            <p><strong>CEP:</strong> ${escola.endereco?.cep || '-'}</p>
+          </div>
+
+        </div>
+      `;
+
+      infoContainer.innerHTML = html;
+    }
+
+    renderInformacoesEscola();
+  </script>
+</body>
+
+</html>
+
+
+</html>

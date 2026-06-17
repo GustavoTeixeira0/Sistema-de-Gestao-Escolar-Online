@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestão Escolar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">Login e Cadastro</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+
+          <li class="nav-item">
+            <a class="nav-link active" href="notas.html">Notas</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="faltas.html">Faltas</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="informacoes_da_escola.html">Informacoes da escola</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="painel_administrativo.html">Painel Administrativo</a>
+          </li>
+
+          </li>
+        </ul>
+        <span id="navUserInfo" class="navbar-text text-info hidden"></span>
+
+      </div>
+    </div>
+  </nav>
+  <br>
+  <div class="container d-flex justify-content-center align-items-center">
+
+    <div class="card" style="max-width: 1100px; width:100%;">
+
+      <div class="title">
+        <h2 class="text-center">
+          Para cadastrar, é necessário<br>
+          preencher as informações:
+        </h2>
+      </div>
+
+      <form>
+
+        <div class="row g-4">
+
+
+          <div class="col-md-6">
+
+            <div class="input-group">
+              <input type="text" id="escolaNome" placeholder="Nome da escola">
+              <span class="icon"><i class="bi bi-person"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaCnpj" placeholder="CNPJ">
+              <span class="icon"><i class="bi bi-key"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="email" id="escolaEmail" placeholder="E-mail principal">
+              <span class="icon"><i class="bi bi-building"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaTelefone" placeholder="Telefone">
+              <span class="icon"><i class="bi bi-person"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaWhatsapp" placeholder="WhatsApp">
+              <span class="icon"><i class="bi bi-key"></i></span>
+            </div>
+
+            <div class="input-group">
+              <select id="escolaTipo">
+                <option value="">Tipo da instituição</option>
+                <option value="Pública">Pública</option>
+                <option value="Privada">Privada</option>
+              </select>
+              <span class="icon"><i class="bi bi-chevron-down"></i></span>
+            </div>
+
+          </div>
+
+          <!-- COLUNA DIREITA -->
+          <div class="col-md-6">
+
+            <div class="input-group">
+              <input type="text" id="escolaCep" placeholder="CEP">
+              <span class="icon"><i class="bi bi-person"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaRua" placeholder="Rua">
+              <span class="icon"><i class="bi bi-key"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaNumero" placeholder="Número">
+              <span class="icon"><i class="bi bi-building"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaBairro" placeholder="Bairro">
+              <span class="icon"><i class="bi bi-person"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaCidade" placeholder="Cidade">
+              <span class="icon"><i class="bi bi-key"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="escolaEstado" placeholder="Estado">
+              <span class="icon"><i class="bi bi-building"></i></span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="container d-flex justify-content-center align-items-center">
+
+          <div class="card" style="max-width: 1100px; width:100%;">
+
+            <div class="title">
+              <h2 class="text-center">
+                Cadastre o administrador<br>
+                da instituição de ensino aqui:
+              </h2>
+            </div>
+            <div class="input-group">
+              <input type="text" id="admNome" placeholder="Nome do administrador">
+              <span class="icon"><i class="bi bi-person-lines-fill"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="admCpf" class="cpf-mask" placeholder="CPF do administrador" maxlength="14">
+              <span class="icon"><i class="bi bi-person"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="admSenha" placeholder="Senha do administrador">
+              <span class="icon"><i class="bi bi-key"></i></span>
+            </div>
+
+            <div class="actions">
+              <button type="button" onclick="cadastrarEscolaEAdmin()">Inscrever a instituição de ensino</button>
+            </div>
+
+            <div class="msg" id="msgCadastroEscola"></div>
+          </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
